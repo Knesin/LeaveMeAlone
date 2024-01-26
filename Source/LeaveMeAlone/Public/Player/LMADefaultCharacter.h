@@ -38,7 +38,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Zoom")
 	float ArmLengthMin = 400.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Zoom")
-	float ZoomSpeed = 60.0f;
+	float ZoomSpeed = 75.0f;
 
 public:
 	// Called every frame
@@ -54,6 +54,5 @@ private:
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
-	void ZoomIn();
-	void ZoomOut();
+	void CameraZoom(float Value);
 };
