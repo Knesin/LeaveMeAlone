@@ -20,4 +20,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	//6
+	virtual void BeginSpectatingState() override;
 };
