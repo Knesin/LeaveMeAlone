@@ -25,6 +25,10 @@ protected:
 	float MaxStamina = 100.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	float DecreaseStamina = 0.1f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float IncreaseStamina = 5.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float DelayIncreaseStamina = 2.0f;
 
 public:
 	// Called every frame
@@ -34,8 +38,16 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float GetStamina() const { return Stamina; }
-	void Decrease();
+
+	void StaminaDecrease();
+	void StaminaIncrease();
+	bool IsStaminaFull() const;
+	bool IsStaminaEmpty() const;
 
 private:
 	float Stamina = 0.0f;
+	FTimerHandle IncreaseTimerHandle;
+	void Increase();
+	void StartTimer();
+	void StopTimer();
 };

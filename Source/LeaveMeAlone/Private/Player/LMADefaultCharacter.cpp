@@ -35,7 +35,7 @@ ALMADefaultCharacter::ALMADefaultCharacter()
 	bUseControllerRotationYaw = false;
 	//  6
 	HealthComponent = CreateDefaultSubobject<ULMAHealthComponent>("HealthComponent");
-	//DZ 6
+	// DZ 6
 	StaminaComponent = CreateDefaultSubobject<ULMAStaminaComponent>("StaminaComponent");
 }
 
@@ -73,21 +73,29 @@ void ALMADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ALMADefaultCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ALMADefaultCharacter::MoveRight);
-	//DZ 5
+	// DZ 5
 	PlayerInputComponent->BindAxis("CameraZoom", this, &ALMADefaultCharacter::CameraZoom);
-	//DZ 6
+	// DZ 6
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ALMADefaultCharacter::StartSprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ALMADefaultCharacter::StopSprint);
 }
 
 void ALMADefaultCharacter::MoveForward(float Value)
 {
-	AddMovementInput(GetActorForwardVector(), Value);
+	if (Value != 0.0f)
+	{
+		Sprint(Value);
+		AddMovementInput(GetActorForwardVector(), Value);
+	}
 }
 
 void ALMADefaultCharacter::MoveRight(float Value)
 {
-	AddMovementInput(GetActorRightVector(), Value);
+	if ( Value != 0.0f)
+	{
+		Sprint(Value);
+		AddMovementInput(GetActorRightVector(), Value);
+	}
 }
 
 void ALMADefaultCharacter::CameraZoom(float Value)
@@ -133,19 +141,45 @@ void ALMADefaultCharacter::RotationPlayerOnCursor()
 	}
 }
 
-void ALMADefaultCharacter::OnHealthChanged(float NewHealth) {
+void ALMADefaultCharacter::OnHealthChanged(float NewHealth)
+{
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Health = %f"), NewHealth));
 }
 
-void ALMADefaultCharacter::StartSprint() {
-	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
-	StaminaComponent->Decrease();
+void ALMADefaultCharacter::StartSprint()
+{
+	IsSprint = true;
 }
 
-void ALMADefaultCharacter::StopSprint() {
-	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
+void ALMADefaultCharacter::StopSprint()
+{
+	IsSprint = false;
 }
 
-void ALMADefaultCharacter::OnStaminaChanged(float NewStamina) {
+void ALMADefaultCharacter::OnStaminaChanged(float NewStamina)
+{
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Stamina = %f"), NewStamina));
+}
+
+void ALMADefaultCharacter::Sprint(float Value)
+{
+	if (IsSprint && Value != 0.0f)
+	{
+		if (!StaminaComponent->IsStaminaEmpty())
+		{
+			GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+			StaminaComponent->StaminaDecrease();
+		}
+		else
+		{
+			GetCharacterMovement()->MaxWalkSpeed = 300.0f;
+			StaminaComponent->StaminaIncrease();
+		}
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = 300.0f;
+		StaminaComponent->StaminaIncrease();
+
+	}
 }

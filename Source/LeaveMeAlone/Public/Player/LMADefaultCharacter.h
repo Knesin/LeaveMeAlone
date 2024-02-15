@@ -23,6 +23,8 @@ public:
 
 	UFUNCTION()
 	ULMAHealthComponent* GetHealthComponent() const { return HealthComponent; }
+	UFUNCTION(BlueprintCallable)
+	bool OnSprint() const { return IsSprint; };
 
 protected:
 	// Called when the game starts or when spawned
@@ -65,6 +67,7 @@ private:
 	float YRotation = -75.0f;
 	float ArmLength = 1400.0f;
 	float FOV = 55.0f;
+	bool IsSprint = false;
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -73,7 +76,9 @@ private:
 	void OnDeath();
 	void RotationPlayerOnCursor();
 	void OnHealthChanged(float NewHealth);
+	//DZ6
 	void StartSprint();
 	void StopSprint();
 	void OnStaminaChanged(float NewStamina);
+	void Sprint(float Value);
 };
