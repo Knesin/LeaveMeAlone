@@ -73,7 +73,7 @@ void ULMAStaminaComponent::StartTimer()
 	if (!IncreaseTimerHandle.IsValid()) // Запускаем таймер 
 	{
 		AActor* OwnerComponent = GetOwner();
-		if (OwnerComponent)
+		if (IsValid(OwnerComponent))
 		{
 			OwnerComponent->GetWorldTimerManager().SetTimer(
 				IncreaseTimerHandle, this, &ULMAStaminaComponent::Increase, DelayIncreaseStamina, true);
@@ -86,7 +86,7 @@ void ULMAStaminaComponent::StopTimer()
 	if (IncreaseTimerHandle.IsValid()) // останавливаем таймер
 	{
 		AActor* OwnerComponent = GetOwner();
-		if (OwnerComponent)
+		if (IsValid(OwnerComponent))
 		{
 			OwnerComponent->GetWorldTimerManager().ClearTimer(IncreaseTimerHandle);
 		}
