@@ -6,8 +6,11 @@
 #include "Components/ActorComponent.h"
 #include "LMAHealthComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnDeath)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float)
+
+//DECLARE_MULTICAST_DELEGATE(FOnDeath1)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeath);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, NewHealth);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class LEAVEMEALONE_API ULMAHealthComponent : public UActorComponent
@@ -31,11 +34,16 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float GetHealth() const { return Health; }
-
 	UFUNCTION(BlueprintCallable)
+	float GetPercentHealth() const { return Health / MaxHealth; }
+
+	//UFUNCTION(BlueprintCallable)
 	bool IsDead() const;
 
+	UPROPERTY(BlueprintAssignable)
 	FOnDeath OnDeath;
+
+	//UPROPERTY(BlueprintAssignable)
 	FOnHealthChanged OnHealthChanged;
 
 	bool AddHealth(float NewHealth);

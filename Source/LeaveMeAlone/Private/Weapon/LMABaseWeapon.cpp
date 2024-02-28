@@ -16,28 +16,23 @@ ALMABaseWeapon::ALMABaseWeapon()
 
 void ALMABaseWeapon::Fire()
 {
-	if (!FireRateTimer.IsValid())
+	if (GetWorldTimerManager().IsTimerActive(TimerClearTimerFire))
 	{
-		GetWorldTimerManager().SetTimer(FireRateTimer, this, &ALMABaseWeapon::Shoot, CurrentAmmoWeapon.FireRate, true, 0);
+		GetWorldTimerManager().SetTimer(FireRateTimer, this, &ALMABaseWeapon::Shoot, CurrentAmmoWeapon.FireRate, true,
+			GetWorldTimerManager().GetTimerRemaining(TimerClearTimerFire));
+		GetWorldTimerManager().ClearTimer(TimerClearTimerFire);
+		
 	}
 	else
 	{
-		//¬озобнавл€ем таймер с поправкой на врем€ которое он уничтожалс€
-		GetWorldTimerManager().SetTimer(FireRateTimer, this, &ALMABaseWeapon::Shoot, CurrentAmmoWeapon.FireRate, true,
-			GetWorldTimerManager().GetTimerRemaining(TimerClearTimerFire));
-		//ќстанавливаем уничтожение таймера уничтожени€ следующего выстрела
-		GetWorldTimerManager().ClearTimer(TimerClearTimerFire);
+		GetWorldTimerManager().SetTimer(FireRateTimer, this, &ALMABaseWeapon::Shoot, CurrentAmmoWeapon.FireRate, true, 0);
 	}
 }
 
 void ALMABaseWeapon::FireStop()
 {
-	GetWorldTimerManager().PauseTimer(FireRateTimer);
-	//далее таймер следующего выстрела уничножаетс€ через врем€ оставшеес€ до следующего выстрела.
-	GetWorldTimerManager().SetTimer(
-		TimerClearTimerFire, FTimerDelegate::CreateLambda([this]() {
-		GetWorldTimerManager().ClearTimer(FireRateTimer); }),
-		GetWorldTimerManager().GetTimerRemaining(FireRateTimer), false);
+	GetWorldTimerManager().SetTimer(TimerClearTimerFire, GetWorldTimerManager().GetTimerRemaining(FireRateTimer), false);
+	GetWorldTimerManager().ClearTimer(FireRateTimer);
 }
 
 void ALMABaseWeapon::ChangeClip()
@@ -74,7 +69,6 @@ void ALMABaseWeapon::Shoot()
 void ALMABaseWeapon::DecrementBullets()
 {
 	CurrentAmmoWeapon.Bullets--;
-	UE_LOG(LogWeapon, Display, TEXT("Bullets = %s"), *FString::FromInt(CurrentAmmoWeapon.Bullets));
 	if (IsCurrentClipEmpty())
 	{
 		OnCurrentlyClipEmpty.Broadcast();

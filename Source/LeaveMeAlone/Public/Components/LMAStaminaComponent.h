@@ -6,7 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "LMAStaminaComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnStaminaChanged, float)
+//DECLARE_MULTICAST_DELEGATE_OneParam(FOnStaminaChanged, float)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStaminaChanged, float, NewStamina);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class LEAVEMEALONE_API ULMAStaminaComponent : public UActorComponent
@@ -34,6 +35,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UPROPERTY(BlueprintAssignable)
 	FOnStaminaChanged OnStaminaChanged;
 
 	UFUNCTION(BlueprintCallable)

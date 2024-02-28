@@ -77,12 +77,14 @@ private:
 	void MoveRight(float Value);
 	void CameraZoom(float Value);
 	//6
+	UFUNCTION()
 	void OnDeath();
 	void RotationPlayerOnCursor();
 	void OnHealthChanged(float NewHealth);
 	//DZ6
 	void StartSprint();
 	void StopSprint();
+	UFUNCTION()
 	void OnStaminaChanged(float NewStamina);
 	void Sprint(float Value);
 };

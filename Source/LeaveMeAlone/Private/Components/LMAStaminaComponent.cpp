@@ -34,7 +34,7 @@ void ULMAStaminaComponent::StaminaDecrease()
 	{
 		StopTimer();
 		Stamina = FMath::Clamp(Stamina - DecreaseStamina, 0.0f, MaxStamina);
-		OnStaminaChanged.Broadcast(Stamina);
+		OnStaminaChanged.Broadcast(Stamina/MaxStamina);
 	}
 }
 
@@ -42,7 +42,7 @@ void ULMAStaminaComponent::StaminaIncrease()
 {
 	if (IsStaminaFull())
 	{
-		// После востановления выносливости останавливаем таймер
+		// После восстановления выносливости останавливаем таймер
 		StopTimer();
 	}
 	else
@@ -64,7 +64,7 @@ bool ULMAStaminaComponent::IsStaminaEmpty() const
 void ULMAStaminaComponent::Increase()
 {
 	Stamina = FMath::Clamp(Stamina + IncreaseStamina, 0.0f, MaxStamina);
-	OnStaminaChanged.Broadcast(Stamina);
+	OnStaminaChanged.Broadcast(Stamina/MaxStamina);
 	StaminaIncrease();
 }
 

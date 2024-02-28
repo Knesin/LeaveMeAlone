@@ -52,11 +52,13 @@ void ALMADefaultCharacter::BeginPlay()
 		CurrentCursor = UGameplayStatics::SpawnDecalAtLocation(GetWorld(), CursorMaterial, CursorSize, FVector(0));
 	}
 	OnHealthChanged(HealthComponent->GetHealth());
-	HealthComponent->OnDeath.AddUObject(this, &ALMADefaultCharacter::OnDeath);
+	//HealthComponent->OnDeath.AddUObject(this, &ALMADefaultCharacter::OnDeath);
+	HealthComponent->OnDeath.AddDynamic(this, &ALMADefaultCharacter::OnDeath);
 	HealthComponent->OnHealthChanged.AddUObject(this, &ALMADefaultCharacter::OnHealthChanged);
+	//HealthComponent->OnHealthChanged.Add(this, &ALMADefaultCharacter::OnHealthChanged);
 
 	OnStaminaChanged(StaminaComponent->GetStamina());
-	StaminaComponent->OnStaminaChanged.AddUObject(this, &ALMADefaultCharacter::OnStaminaChanged);
+	StaminaComponent->OnStaminaChanged.AddDynamic(this, &ALMADefaultCharacter::OnStaminaChanged);
 }
 
 // Called every frame
@@ -150,7 +152,7 @@ void ALMADefaultCharacter::RotationPlayerOnCursor()
 
 void ALMADefaultCharacter::OnHealthChanged(float NewHealth)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Health = %f"), NewHealth));
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, FString::Printf(TEXT("Health = %f"), NewHealth));
 }
 
 void ALMADefaultCharacter::StartSprint()
@@ -165,7 +167,7 @@ void ALMADefaultCharacter::StopSprint()
 
 void ALMADefaultCharacter::OnStaminaChanged(float NewStamina)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Stamina = %f"), NewStamina));
+	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Stamina = %f"), NewStamina));
 }
 
 void ALMADefaultCharacter::Sprint(float Value)
